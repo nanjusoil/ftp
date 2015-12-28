@@ -34,7 +34,7 @@ int main (int argc, char **argv) {
     socklen_t clilen;
     struct sockaddr_in cliaddr;
     if (argc < 3) {
-        printf("Usage: <OutputFile> <ProxyIP> <ProxyPort> \n");
+        printf("Usage: ./executableFile <ProxyIP> <ProxyPort> \n");
         return -1;
     }
     
