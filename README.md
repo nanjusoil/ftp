@@ -15,19 +15,19 @@ Download code
 
 **With simple browser**
 
-You can click ``` Download ZIP ``` to download a zip file directly
+You can click `Download ZIP` to download a zip file directly
 
 **With Git**
  
 1. install Git on your system.
 2. open command prompt
-3. input ```git clone https://github.com/HSNL-TAs/final-project-proxy-sample.git```
+3. input `git clone https://github.com/HSNL-TAs/2015-ICTN-Final-Project-FTP-Proxy.git FTP-Proxy`
 
 Running
 ==
-```bash
-$ gcc final_proxy_release.c -o proxy
-$ ./proxy
+```sh
+$ gcc FtpProxy.c -o proxy
+$ ./proxy <ProxyIP> <ProxyPort>
 ```
 
 Question?
