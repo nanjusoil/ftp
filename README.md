@@ -27,8 +27,10 @@ Running
 ==
 ```sh
 $ gcc FtpProxy.c -o proxy
-$ ./proxy <ProxyIP> <ProxyPort>
+$ ./proxy <ProxyIP> <ProxyPort> <Rate>
 ```
+Please note that your proxy should control the transmission rate by given `<Rate>`.    
+You can access the parameter `Rate` through `argv[3]`.
 
 Question?
 ==
