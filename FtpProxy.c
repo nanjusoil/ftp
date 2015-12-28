@@ -1,3 +1,8 @@
+/**
+ * Simple FTP Proxy For 2015 Introduction to Computer Network.
+ * Author: z58085111 @ HSNL
+ * 2015/12
+ * **/
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -109,12 +114,12 @@ int proxy_func(int ser_port, int clifd, int rate) {
     socklen_t clilen;
     struct sockaddr_in cliaddr;
 	
-	// select vars
+    // select vars
     int maxfdp1;
     int i, nready = 0;
     fd_set rset, allset;
 
-	// connect to FTP server
+    // connect to FTP server
     if ((serfd = connect_FTP(ser_port, clifd)) < 0 ) {
         printf("connect to FTP server failed.\n");
         return -1;
@@ -220,6 +225,8 @@ int create_server(int port){
 }
 
 void rate_control(){
-    //Implement your main logic of rate control here.
-	//Add return variable or parameters you need.
+    /**
+     * Implement your main logic of rate control here.
+     * Add return variable or parameters you need.
+     * **/
 }
