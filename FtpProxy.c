@@ -95,7 +95,7 @@ int connect_FTP(int ser_port, int clifd) {
             printf("connection establish failed.\n");
         }
 
-        if (write(clifd, buffer, strlen(buffer)) < 0) {
+        if (write(clifd, buffer, byte_num) < 0) {
             printf("write to client failed.\n");
             return -1;
         }
