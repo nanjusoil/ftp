@@ -91,7 +91,7 @@ int connect_FTP(int ser_port, int clifd) {
 
     printf("Connect to FTP server\n");
     if (ser_port == FTP_PORT) {
-        if ((byte_num = read(sockfd, buffer, MAXSIZE)) <=0 ) {
+        if ((byte_num = read(sockfd, buffer, MAXSIZE)) <= 0) {
             printf("connection establish failed.\n");
         }
 
@@ -139,7 +139,7 @@ int proxy_func(int ser_port, int clifd, int rate) {
         maxfdp1 = max(clifd, serfd) + 1;
 
         // select descriptor
-        nready = select(maxfdp1+1, &rset, NULL, NULL, NULL);
+        nready = select(maxfdp1 + 1, &rset, NULL, NULL, NULL);
         if (nready > 0) {
             // check FTP client socket fd
             if (FD_ISSET(clifd, &rset)) {
@@ -174,7 +174,7 @@ int proxy_func(int ser_port, int clifd, int rate) {
                     sprintf(buffer, "%d Entering Passive Mode (%d,%d,%d,%d,%d,%d).\n", status, proxy_IP[0], proxy_IP[1], proxy_IP[2], proxy_IP[3], pasv[5], pasv[6]);
 
                     if ((childpid = fork()) == 0) {
-                        data_port = pasv[5]*256 + pasv[6];
+                        data_port = pasv[5] * 256 + pasv[6];
                         datafd = create_server(data_port);
                         printf("waiting for data connection!\n");
                         clilen = sizeof(struct sockaddr_in);
