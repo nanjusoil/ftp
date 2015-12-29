@@ -37,7 +37,7 @@ int main (int argc, char **argv) {
         printf("Usage: ./executableFile <ProxyIP> <ProxyPort> \n");
         return -1;
     }
-    
+
     sscanf(argv[1], " %d.%d.%d.%d", &proxy_IP[0], &proxy_IP[1], &proxy_IP[2], &proxy_IP[3]);
     port = atoi(argv[2]);
 
@@ -49,7 +49,7 @@ int main (int argc, char **argv) {
             printf("accept failed\n");
             return 0;
         }
-        
+
         printf("Client: %s:%d connect!\n", inet_ntoa(cliaddr.sin_addr), htons(cliaddr.sin_port));
         if ((childpid = fork()) == 0) {
             close(ctrlfd);
@@ -57,7 +57,7 @@ int main (int argc, char **argv) {
             printf("Client: %s:%d terminated!\n", inet_ntoa(cliaddr.sin_addr), htons(cliaddr.sin_port));
             exit(0);
         }
-        
+
         close(connfd);
     }
     return 0;
@@ -74,33 +74,33 @@ int connect_FTP(int ser_port, int clifd) {
         printf("create socket error");
         return -1;
     }
-    
+
     bzero(&servaddr, sizeof(servaddr));
     servaddr.sin_family = AF_INET;
     servaddr.sin_port = htons(ser_port);
-    
+
     if (inet_pton(AF_INET, addr, &servaddr.sin_addr) <= 0) {
         printf("inet_pton error for %s", addr);
         return -1;
     }
-    
+
     if (connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {
         printf("connect error");
         return -1;
     }
-    
+
     printf("Connect to FTP server\n");
     if (ser_port == FTP_PORT) {
         if ((byte_num = read(sockfd, buffer, MAXSIZE)) <=0 ) {
             printf("connection establish failed.\n");
         }
-		
+
         if (write(clifd, buffer, strlen(buffer)) < 0) {
             printf("write to client failed.\n");
             return -1;
         }
     }
-	
+
     return sockfd;
 }
 
@@ -113,7 +113,7 @@ int proxy_func(int ser_port, int clifd, int rate) {
     int childpid;
     socklen_t clilen;
     struct sockaddr_in cliaddr;
-	
+
     // select vars
     int maxfdp1;
     int i, nready = 0;
@@ -124,20 +124,20 @@ int proxy_func(int ser_port, int clifd, int rate) {
         printf("connect to FTP server failed.\n");
         return -1;
     }
-	
+
     datafd = serfd;
-	
-    // initialize select vars 
+
+    // initialize select vars
     FD_ZERO(&allset);
     FD_SET(clifd, &allset);
     FD_SET(serfd, &allset);
-	
+
     // selecting
     for (;;) {
         // reset select vars
         rset = allset;
         maxfdp1 = max(clifd, serfd)+1;
-		
+
         // select descriptor
         nready = select(maxfdp1+1, &rset, NULL, NULL, NULL);
         if (nready > 0) {
@@ -148,14 +148,14 @@ int proxy_func(int ser_port, int clifd, int rate) {
                     printf("client terminated the connection.\n");
                     break;
                 }
-                
-				
-                if (write(serfd, buffer, strlen(buffer)) < 0) {
+
+
+                if (write(serfd, buffer, byte_num) < 0) {
                     printf("write to server failed.\n");
                     break;
                 }
             }
-			
+
             // check FTP server socket fd
             if (FD_ISSET(serfd, &rset)) {
                 memset(buffer, 0, MAXSIZE);
@@ -163,16 +163,16 @@ int proxy_func(int ser_port, int clifd, int rate) {
                     printf("server terminated the connection.\n");
                     break;
                 }
-				
+
                 buffer[byte_num] = '\0';
                 status = atoi(buffer);
-                
+
                 if (status == FTP_PASV_CODE && ser_port == FTP_PORT) {
-                    //printf("%s", buffer);
+
                     sscanf(buffer, "%d Entering Passive Mode (%d,%d,%d,%d,%d,%d).",&pasv[0],&pasv[1],&pasv[2],&pasv[3],&pasv[4],&pasv[5],&pasv[6]);
                     memset(buffer, 0, MAXSIZE);
                     sprintf(buffer, "%d Entering Passive Mode (%d,%d,%d,%d,%d,%d).\n", status, proxy_IP[0], proxy_IP[1], proxy_IP[2], proxy_IP[3], pasv[5], pasv[6]);
-                    //printf("%s", buffer);
+
                     if ((childpid = fork()) == 0) {
                         data_port = pasv[5]*256 + pasv[6];
                         datafd = create_server(data_port);
@@ -183,16 +183,16 @@ int proxy_func(int ser_port, int clifd, int rate) {
                             printf("accept failed\n");
                             return 0;
                         }
-                        
+
                         printf("data connection from: %s:%d connect.\n", inet_ntoa(cliaddr.sin_addr), htons(cliaddr.sin_port));
                         proxy_func(data_port, connfd, rate);
                         printf("end of data connection!\n");
                         exit(0);
                     }
                 }
-				
-                
-                if ( write(clifd, buffer, strlen(buffer)) < 0) {
+
+
+                if ( write(clifd, buffer, byte_num) < 0) {
                     printf("write to client failed.\n");
                     break;
                 }
@@ -208,7 +208,7 @@ int proxy_func(int ser_port, int clifd, int rate) {
 int create_server(int port){
     int listenfd;
     struct sockaddr_in servaddr;
-	
+
     listenfd = socket(AF_INET, SOCK_STREAM, 0);
     bzero(&servaddr, sizeof(servaddr));
     servaddr.sin_family = AF_INET;
@@ -219,7 +219,7 @@ int create_server(int port){
         perror("bind failed. Error");
         return -1;
     }
-    
+
     listen(listenfd, 3);
     return listenfd;
 }
