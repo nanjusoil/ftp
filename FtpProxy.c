@@ -120,7 +120,7 @@ int proxy_func(int ser_port, int clifd, int rate) {
     fd_set rset, allset;
 
     // connect to FTP server
-    if ((serfd = connect_FTP(ser_port, clifd)) < 0 ) {
+    if ((serfd = connect_FTP(ser_port, clifd)) < 0) {
         printf("connect to FTP server failed.\n");
         return -1;
     }
@@ -136,7 +136,7 @@ int proxy_func(int ser_port, int clifd, int rate) {
     for (;;) {
         // reset select vars
         rset = allset;
-        maxfdp1 = max(clifd, serfd)+1;
+        maxfdp1 = max(clifd, serfd) + 1;
 
         // select descriptor
         nready = select(maxfdp1+1, &rset, NULL, NULL, NULL);
@@ -144,7 +144,7 @@ int proxy_func(int ser_port, int clifd, int rate) {
             // check FTP client socket fd
             if (FD_ISSET(clifd, &rset)) {
                 memset(buffer, 0, MAXSIZE);
-                if ((byte_num = read(clifd, buffer, MAXSIZE)) <=0 ) {
+                if ((byte_num = read(clifd, buffer, MAXSIZE)) <= 0) {
                     printf("client terminated the connection.\n");
                     break;
                 }
@@ -159,7 +159,7 @@ int proxy_func(int ser_port, int clifd, int rate) {
             // check FTP server socket fd
             if (FD_ISSET(serfd, &rset)) {
                 memset(buffer, 0, MAXSIZE);
-                if ((byte_num = read(serfd, buffer, MAXSIZE)) <= 0 ) {
+                if ((byte_num = read(serfd, buffer, MAXSIZE)) <= 0) {
                     printf("server terminated the connection.\n");
                     break;
                 }
@@ -192,7 +192,7 @@ int proxy_func(int ser_port, int clifd, int rate) {
                 }
 
 
-                if ( write(clifd, buffer, byte_num) < 0) {
+                if (write(clifd, buffer, byte_num) < 0) {
                     printf("write to client failed.\n");
                     break;
                 }
@@ -205,7 +205,7 @@ int proxy_func(int ser_port, int clifd, int rate) {
     return 0;
 }
 
-int create_server(int port){
+int create_server(int port) {
     int listenfd;
     struct sockaddr_in servaddr;
 
@@ -224,7 +224,7 @@ int create_server(int port){
     return listenfd;
 }
 
-void rate_control(){
+void rate_control() {
     /**
      * Implement your main logic of rate control here.
      * Add return variable or parameters you need.
