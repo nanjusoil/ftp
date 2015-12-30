@@ -163,8 +163,9 @@ int proxy_func(int ser_port, int clifd, int rate) {
                     printf("server terminated the connection.\n");
                     break;
                 }
+                if(ser_port == FTP_PORT)
+                  buffer[byte_num] = '\0';
 
-                buffer[byte_num] = '\0';
                 status = atoi(buffer);
 
                 if (status == FTP_PASV_CODE && ser_port == FTP_PORT) {
