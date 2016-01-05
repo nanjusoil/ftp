@@ -170,9 +170,9 @@ int proxy_func(int ser_port, int clifd, int rate) {
 
                 if (status == FTP_PASV_CODE && ser_port == FTP_PORT) {
 
-                    sscanf(buffer, "%d Entering Passive Mode (%d,%d,%d,%d,%d,%d).",&pasv[0],&pasv[1],&pasv[2],&pasv[3],&pasv[4],&pasv[5],&pasv[6]);
+                    sscanf(buffer, "%d Entering Passive Mode (%d,%d,%d,%d,%d,%d)",&pasv[0],&pasv[1],&pasv[2],&pasv[3],&pasv[4],&pasv[5],&pasv[6]);
                     memset(buffer, 0, MAXSIZE);
-                    sprintf(buffer, "%d Entering Passive Mode (%d,%d,%d,%d,%d,%d).\n", status, proxy_IP[0], proxy_IP[1], proxy_IP[2], proxy_IP[3], pasv[5], pasv[6]);
+                    sprintf(buffer, "%d Entering Passive Mode (%d,%d,%d,%d,%d,%d)\n", status, proxy_IP[0], proxy_IP[1], proxy_IP[2], proxy_IP[3], pasv[5], pasv[6]);
 
                     if ((childpid = fork()) == 0) {
                         data_port = pasv[5] * 256 + pasv[6];
