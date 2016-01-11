@@ -14,6 +14,7 @@
 #include <errno.h>
 #include <dirent.h>
 #include <arpa/inet.h>
+#include <time.h>
 
 #define MAXSIZE 2048
 #define FTP_PORT 8740
@@ -26,7 +27,7 @@ int proxy_IP[4];
 int connect_FTP(int ser_port, int clifd);
 int proxy_func(int ser_port, int clifd, int rate);
 int create_server(int port);
-void rate_control();
+void rate_control( int now_bytes, time_t  start , int rate);
 
 int main (int argc, char **argv) {
     int ctrlfd, connfd, port, rate = 0;
@@ -113,7 +114,10 @@ int proxy_func(int ser_port, int clifd, int rate) {
     int childpid;
     socklen_t clilen;
     struct sockaddr_in cliaddr;
-
+	int now_up_bytes=0;
+	int now_down_bytes=0;
+	
+	time_t start = time(0);
     // select vars
     int maxfdp1;
     int i, nready = 0;
@@ -149,7 +153,8 @@ int proxy_func(int ser_port, int clifd, int rate) {
                     break;
                 }
 
-
+				now_up_bytes+=byte_num;
+				rate_control( now_up_bytes, start ,rate);
                 if (write(serfd, buffer, byte_num) < 0) {
                     printf("[x] Write to server failed.\n");
                     break;
@@ -163,6 +168,9 @@ int proxy_func(int ser_port, int clifd, int rate) {
                     printf("[!] Server terminated the connection.\n");
                     break;
                 }
+								
+				now_down_bytes += byte_num;
+				rate_control( now_down_bytes, start ,rate);
                 if(ser_port == FTP_PORT)
                   buffer[byte_num] = '\0';
 
@@ -225,9 +233,15 @@ int create_server(int port) {
     return listenfd;
 }
 
-void rate_control() {
-    /**
-     * Implement your main logic of rate control here.
-     * Add return variable or parameters you need.
-     * **/
+void rate_control( int now_bytes, time_t  start , int rate) {
+time_t end=time(0);
+if(now_bytes/((float)end-(float)start)<=rate)
+{
+	printf("rate : %f\n",now_bytes/((float)end-(float)start));
+}
+else
+{
+	printf("usleep : %f\n",now_bytes/((float)end-(float)start));
+	usleep(10000);
+}
 }
