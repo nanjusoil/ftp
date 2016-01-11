@@ -41,7 +41,7 @@ int main (int argc, char **argv) {
 
     sscanf(argv[1], " %d.%d.%d.%d", &proxy_IP[0], &proxy_IP[1], &proxy_IP[2], &proxy_IP[3]);
     port = atoi(argv[2]);
-
+	rate= atoi(argv[3]);
     ctrlfd = create_server(port);
     clilen = sizeof(struct sockaddr_in);
     for (;;) {
@@ -235,7 +235,7 @@ int create_server(int port) {
 
 void rate_control( int now_bytes, time_t  start , int rate) {
 time_t end=time(0);
-if(now_bytes/((float)end-(float)start)<=(float)rate*1024)
+if(now_bytes/((float)end-(float)start) <= (float)rate *1024)
 {
 	printf("rate : %f\n",now_bytes/((float)end-(float)start));
 }
