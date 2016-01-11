@@ -242,6 +242,6 @@ if(now_bytes/((float)end-(float)start) <= (float)rate *1024)
 else
 {
 	printf("usleep : %f now_bytes:%d start:%d end:%d rate:%d \n",now_bytes/((float)end-(float)start)/1024,now_bytes ,start , end , rate);
-	usleep(10000);
+	usleep(1000);
 }
 }
