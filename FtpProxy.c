@@ -235,7 +235,7 @@ int create_server(int port) {
 
 void rate_control( int now_bytes, time_t  start , int rate) {
 time_t end=time(0);
-if(now_bytes/((float)end-(float)start)<=rate)
+if(now_bytes/((float)end-(float)start)<=(float)rate*1024)
 {
 	printf("rate : %f\n",now_bytes/((float)end-(float)start));
 }
