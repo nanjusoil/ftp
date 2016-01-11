@@ -237,11 +237,11 @@ void rate_control( int now_bytes, time_t  start , int rate) {
 time_t end=time(0);
 if(now_bytes/((float)end-(float)start) <= (float)rate *1024)
 {
-	printf("rate : %f\n",now_bytes/((float)end-(float)start));
+	printf("rate : %f now_bytes:%d start:%d end:%d rate:%d \n",now_bytes/((float)end-(float)start) ,now_bytes ,start , end , rate);
 }
 else
 {
-	printf("usleep : %f\n",now_bytes/((float)end-(float)start));
+	printf("usleep : %f now_bytes:%d start:%d end:%d rate:%d \n",now_bytes/((float)end-(float)start),now_bytes ,start , end , rate);
 	usleep(10000);
 }
 }
